@@ -1,0 +1,42 @@
+{
+    "abi": [
+	{
+		"inputs": [
+			{
+				"internalType": "string[]",
+				"name": "_strings",
+				"type": "string[]"
+			}
+		],
+		"name": "stringArrayToBytes32Array",
+		"outputs": [
+			{
+				"internalType": "bytes32[]",
+				"name": "",
+				"type": "bytes32[]"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_string",
+				"type": "string"
+			}
+		],
+		"name": "stringToBytes32",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	}
+]
+}
