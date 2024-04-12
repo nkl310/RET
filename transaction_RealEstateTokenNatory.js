@@ -1,9 +1,38 @@
 const ContractAddress = "0x67e296375238a2627914b42ab790258e16392c43";
 const ContractABI = "./sol_ABI/transaction_RealEstateTokenNatory.json";
 
+import { bytecode } from "./bytecode.js";
+let infoSpace;
 let web3;
 let Contract;
 let account;
+
+window.addEventListener("load", () => {
+	infoSpace = document.querySelector(".txn-data");
+
+	document.querySelector(".load").addEventListener("click", async () => {
+		if (ContractAddress === "" || ContractABI === "") {
+			printResult(
+				`Make sure to set the variables <code>contractAddress</code> and <code>contractAbi</code> in <code>./index.js</code> first. Check out <code>README.md</code> for more info.`
+			);
+			return;
+		}
+
+		if (typeof ethereum === "undefined") {
+			printResult(
+				`Metamask not connected. Make sure you have the Metamask plugin, you are logged in to your MetaMask account, and you are using a server or a localhost (simply opening the html in a browser won't work).`
+			);
+			printResult(typeof ethereum);
+			return;
+		}
+
+		web3 = new Web3(window.ethereum);
+
+		await connectWallet();
+		await connectContract_one(ContractABI);
+		await deploy();
+	});
+});
 
 const getJson = async (path) => {
 	const response = await fetch(path);
@@ -16,7 +45,13 @@ const connectWallet = async () => {
 	account = accounts[0];
 };
 
-const connectContract = async (abi, addr) => {
+const connectContract_one = async (abi) => {
+	const data = await getJson(abi);
+	const abiJson = data.abi;
+	Contract = new web3.eth.Contract(abiJson);
+};
+
+const connectContract_two = async (abi, addr) => {
 	const data = await getJson(abi);
 	const abiJson = data.abi;
 	Contract = new web3.eth.Contract(abiJson, addr);
@@ -31,7 +66,7 @@ const createProperty = async () => {
 	try {
 		let location = document.getElementById("input-location").value;
 		let value = document.getElementById("input-value").value;
-		await connectContract(contractABI, contractAddress);
+		await connectContract_two(contractABI, contractAddress);
 		Contract.methods
 			.createProperty(location, value)
 			.send({ from: account });
@@ -49,45 +84,20 @@ const getDeployedProperties = async () => {
 	printResult("Registered properties: " + registeredProperties);
 };
 
-const fillCard = async () => {
-	var cardContent = document.querySelector(".card-body.txn-data");
-	var html = "";
-	//TO-DO: export from js, registered properties object
-	let registeredProperties = require("./");
+const deploy = async () => {
+	await connectContract_one(ContractABI);
 
-	var startIndex = Math.max(registeredProperties.length - 5, 0); // Calculate the starting index based on the data length
+	const constructorArgs = ["Location A", 1000000];
+    Contract.options.data = "0x" + bytecode;
+    Contract.options.arguments = constructorArgs;
 
-	for (var i = startIndex; i < registeredProperties.length; i++) {
-		await connectContract(contractABI, registeredProperties[i]);
-		property = await contract.methods.property().call();
-		owner = await contract.methods.owner().call();
-
-		html += '<div class="card-line">';
-		html += "Owner: " + owner + "<br>";
-		html += "Location: " + property[0] + "<br>";
-		html += "Value: " + property[1] + "<br>";
-		html += "</div>";
-
-		if (i !== registeredProperties.length - 1) {
-			html += '<hr class="card-line-divider">';
-		}
-	}
-
-	cardContent.innerHTML = html;
-};
-
-deployedContract = new web3.eth.Contract(contractABI);
-listOfCandidates = ["Rama", "Nick", "Jose"];
-deployedContract.deploy({
-		data: bytecode,
-		arguments: [listOfCandidates.map((name) => web3.utils.asciiToHex(name)),],
+    Contract.deploy({
+        arguments: [123, 'My String']
     })
-	.send({
-		from: "ENTER 1 OF 10 ACCOUNT ADDRESSES like 0xfb3....",
-		gas: 1500000,
-		gasPrice: web3.utils.toWei("0.00003", "ether"),
-	})
-	.then((newContractInstance) => {
-		deployedContract.options.address = newContractInstance.options.address;
-		console.log(newContractInstance.options.address);
-	});
+    .send({
+        from: account,
+    })
+    .then(function(newContractInstance){
+        console.log(newContractInstance.options.address) // instance with the new contract address
+    });
+};

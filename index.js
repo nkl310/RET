@@ -1,10 +1,10 @@
 const contractAddress = "0xf8a8490F24E8161b3E48808FDAfb854123b239d4";
-const contractABI = "./transactionABI.json";
+const contractABI = "./sol_ABI/transaction_RealEstateToken.json";
 
 const NatoryContractAddress = "0x3825Bc871f792bde27c956BB1836db0cC5c7D69F";
-const NatoryContractABI = "./natoryABI.json";
+const NatoryContractABI = "./sol_ABI/transaction_RealEstateTokenNatory.json";
 
-var registeredProperties = "";
+let registeredProperties = "";
 
 let infoSpace;
 let web3;
