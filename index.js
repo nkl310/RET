@@ -36,6 +36,7 @@ window.addEventListener("load", () => {
         await connectWallet();
         await connectNatoryContract(NatoryContractABI, NatoryContractAddress);
         await connectContract(contractABI, contractAddress);
+        await createProperty();
         await fillCardWithData();
     });
 });

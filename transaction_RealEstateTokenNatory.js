@@ -6,67 +6,61 @@ let Contract;
 let account;
 
 const getJson = async (path) => {
-    const response = await fetch(path);
-    const data = await response.json();
-    return data;
-}
+	const response = await fetch(path);
+	const data = await response.json();
+	return data;
+};
 
 const connectWallet = async () => {
-    const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-    account = accounts[0];
+	const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+	account = accounts[0];
 };
 
 const connectContract = async (abi, addr) => {
-    const data = await getJson(abi);
-    const abiJson = data.abi;
-    Contract = new web3.eth.Contract(abiJson, addr);
-}
-
-const getBalance = async (addr) => {
-    let balance = await web3.eth.getBalance(addr);
-    return balance;
-}
-
-const createProperty = async () => {
-    try{
-        let location = document.getElementById("input-location").value;
-        let value = document.getElementById("input-value").value;
-        await connectContract(contractABI, contractAddress);
-        Contract.methods.createProperty(location, value).send({from: account});
-    }catch(error){
-        console.log(error.message)
-    }
-}
-
-const getDeployedProperties = async () => {
-    printResult("getDeployedProperties() called.")
-    //type of registeredProperties = object, i.e. registeredProperties[0]
-    registeredProperties = await NatoryContract.methods.getDeployedProperties().call()
-    printResult("Registered properties: " + registeredProperties);
+	const data = await getJson(abi);
+	const abiJson = data.abi;
+	Contract = new web3.eth.Contract(abiJson, addr);
 };
 
-const getTotalSupply = async () => {
-    printResult("getTotalSupply() called")
-    try {
-        const totalSupply = await contract.methods.totalSupply().call();
-        return totalSupply;
-    } catch (error) {
-        console.log(error.message);
-    }
-}
+const getBalance = async (addr) => {
+	let balance = await web3.eth.getBalance(addr);
+	return balance;
+};
+
+const createProperty = async () => {
+	try {
+		let location = document.getElementById("input-location").value;
+		let value = document.getElementById("input-value").value;
+		await connectContract(contractABI, contractAddress);
+		Contract.methods
+			.createProperty(location, value)
+			.send({ from: account });
+	} catch (error) {
+		console.log(error.message);
+	}
+};
+
+const getDeployedProperties = async () => {
+	printResult("getDeployedProperties() called.");
+	//type of registeredProperties = object, i.e. registeredProperties[0]
+	registeredProperties = await NatoryContract.methods
+		.getDeployedProperties()
+		.call();
+	printResult("Registered properties: " + registeredProperties);
+};
 
 const fillCard = async () => {
-    var cardContent = document.querySelector('.card-body.txn-data');
-    var html = "";
-    //TO-DO: export from js, registered properties object
-    let registeredProperties = require("./")
+	var cardContent = document.querySelector(".card-body.txn-data");
+	var html = "";
+	//TO-DO: export from js, registered properties object
+	let registeredProperties = require("./");
 
-    var startIndex = Math.max(registeredProperties.length - 5, 0); // Calculate the starting index based on the data length
+	var startIndex = Math.max(registeredProperties.length - 5, 0); // Calculate the starting index based on the data length
 
-    for (var i = startIndex; i < registeredProperties.length; i++) {
-        await connectContract(contractABI, registeredProperties[i])
-        property = await contract.methods.property().call();
-        owner = await contract.methods.owner().call();
+	for (var i = startIndex; i < registeredProperties.length; i++) {
+		await connectContract(contractABI, registeredProperties[i]);
+		property = await contract.methods.property().call();
+		owner = await contract.methods.owner().call();
 
 		html += '<div class="card-line">';
 		html += "Owner: " + owner + "<br>";
@@ -74,10 +68,26 @@ const fillCard = async () => {
 		html += "Value: " + property[1] + "<br>";
 		html += "</div>";
 
-        if (i !== registeredProperties.length - 1) {
-            html += '<hr class="card-line-divider">';
-        }
-    }   
+		if (i !== registeredProperties.length - 1) {
+			html += '<hr class="card-line-divider">';
+		}
+	}
 
-    cardContent.innerHTML = html;
-}
+	cardContent.innerHTML = html;
+};
+
+deployedContract = new web3.eth.Contract(contractABI);
+listOfCandidates = ["Rama", "Nick", "Jose"];
+deployedContract.deploy({
+		data: bytecode,
+		arguments: [listOfCandidates.map((name) => web3.utils.asciiToHex(name)),],
+    })
+	.send({
+		from: "ENTER 1 OF 10 ACCOUNT ADDRESSES like 0xfb3....",
+		gas: 1500000,
+		gasPrice: web3.utils.toWei("0.00003", "ether"),
+	})
+	.then((newContractInstance) => {
+		deployedContract.options.address = newContractInstance.options.address;
+		console.log(newContractInstance.options.address);
+	});
