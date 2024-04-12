@@ -1,0 +1,20 @@
+body {
+	padding-top: 5rem;
+}
+.container {
+}
+.logo {
+	width: 100px;
+	padding: 10px;
+}
+.ret-query {
+	padding-bottom: 15px;
+}
+.card-line {
+	padding: 10px;
+}
+
+.card-line-divider {
+	border-top: 1px solid #dee2e6;
+	margin: 10px 0;
+}
