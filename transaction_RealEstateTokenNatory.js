@@ -13,7 +13,9 @@ window.addEventListener("load", () => {
 	const Btn_deploy = document.querySelector("#deploy");
 	const Btn_connectInstance = document.querySelector("#connectInstance");
 	const Btn_createProperty = document.querySelector("#createProperty");
-	const Btn_getDeployedProperties = document.querySelector("#getDeployedProperties");
+	const Btn_getDeployedProperties = document.querySelector(
+		"#getDeployedProperties"
+	);
 
 	Btn_connectWallet.addEventListener("click", async () => {
 		await connectWallet();
@@ -35,8 +37,8 @@ window.addEventListener("load", () => {
 		await createProperty();
 	});
 	Btn_getDeployedProperties.addEventListener("click", async () => {
-        const ppts = await getDeployedProperties();
-        await update(ppts);
+		const ppts = await getDeployedProperties();
+		await update(ppts);
 	});
 });
 
@@ -78,7 +80,7 @@ const deploy = async () => {
 			arguments: ["", 0],
 			data: "0x" + bytecode,
 		}).send({
-			from: ACCOUNT
+			from: ACCOUNT,
 		});
 		ADDRESS = instance.options.address;
 		console.log("New instance deployed:", ADDRESS);
@@ -92,33 +94,35 @@ const createProperty = async () => {
 		const location = "Testing415";
 		const value = 224;
 
-		await INSTANCE.methods.createProperty(location, value).send({
+		await INSTANCE.methods
+			.createProperty(location, value)
+			.send({
 				from: ACCOUNT,
 			})
 			.on("receipt", (receipt) => {
 				console.log("Property created:", receipt);
 			});
-        } catch (error) {
-            console.log("createProperty() error:", error);
-        }
-    };
-    
-    const getDeployedProperties = async () => {
-        try {
-            const properties = await INSTANCE.methods
+	} catch (error) {
+		console.log("createProperty() error:", error);
+	}
+};
+
+const getDeployedProperties = async () => {
+	try {
+		const properties = await INSTANCE.methods
 			.getDeployedProperties()
 			.call();
-            console.log("Deployed properties:", properties);
-            return properties;
-        } catch (error) {
-            console.log("getDeployedProperties() error:", error);
-            return;
+		console.log("Deployed properties:", properties);
+		return properties;
+	} catch (error) {
+		console.log("getDeployedProperties() error:", error);
+		return;
 	}
 };
 
 const update = async (properties) => {
-    const list = document.querySelector("#Instances");
-    for(let i = 0; i < properties.length; i++){
-        list.innerHTML += "<li>"+properties[i]+"</li>"
-    }
-}
+	const list = document.querySelector("#Instances");
+	for (let i = 0; i < properties.length; i++) {
+		list.innerHTML += "<li>" + properties[i] + "</li>";
+	}
+};
