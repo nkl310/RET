@@ -1,36 +1,41 @@
-const ContractAddress = "0x67e296375238a2627914b42ab790258e16392c43";
-const ContractABI = "./sol_ABI/transaction_RealEstateTokenNatory.json";
-
+const ABI = "./sol_ABI/transaction_RealEstateTokenNatory.json";
 import { bytecode } from "./bytecode.js";
-let infoSpace;
-let web3;
-let Contract;
-let account;
+
+var ADDRESS = "0x7911cFF8C74E4cba2B2B68cD90C494a8eE836c08";
+var CONTRACT;
+var INSTANCE;
+var ACCOUNT;
+var web3 = new Web3(window.ethereum);
 
 window.addEventListener("load", () => {
-	infoSpace = document.querySelector(".txn-data");
+	const Btn_connectWallet = document.querySelector("#connectWallet");
+	const Btn_connectContract = document.querySelector("#connectContract");
+	const Btn_deploy = document.querySelector("#deploy");
+	const Btn_connectInstance = document.querySelector("#connectInstance");
+	const Btn_createProperty = document.querySelector("#createProperty");
+	const Btn_getDeployedProperties = document.querySelector("#getDeployedProperties");
 
-	document.querySelector(".load").addEventListener("click", async () => {
-		if (ContractAddress === "" || ContractABI === "") {
-			printResult(
-				`Make sure to set the variables <code>contractAddress</code> and <code>contractAbi</code> in <code>./index.js</code> first. Check out <code>README.md</code> for more info.`
-			);
-			return;
-		}
-
-		if (typeof ethereum === "undefined") {
-			printResult(
-				`Metamask not connected. Make sure you have the Metamask plugin, you are logged in to your MetaMask account, and you are using a server or a localhost (simply opening the html in a browser won't work).`
-			);
-			printResult(typeof ethereum);
-			return;
-		}
-
-		web3 = new Web3(window.ethereum);
-
+	Btn_connectWallet.addEventListener("click", async () => {
 		await connectWallet();
-		await connectContract_one(ContractABI);
+	});
+
+	Btn_connectContract.addEventListener("click", async () => {
+		await connectContract();
+	});
+
+	Btn_deploy.addEventListener("click", async () => {
 		await deploy();
+	});
+
+	Btn_connectInstance.addEventListener("click", async () => {
+		await connectInstance();
+	});
+
+	Btn_createProperty.addEventListener("click", async () => {
+		await createProperty();
+	});
+	Btn_getDeployedProperties.addEventListener("click", async () => {
+		await getDeployedProperties();
 	});
 });
 
@@ -42,62 +47,70 @@ const getJson = async (path) => {
 
 const connectWallet = async () => {
 	const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-	account = accounts[0];
+	ACCOUNT = accounts[0];
+	console.log(ACCOUNT);
 };
 
-const connectContract_one = async (abi) => {
-	const data = await getJson(abi);
-	const abiJson = data.abi;
-	Contract = new web3.eth.Contract(abiJson);
+const connectContract = async () => {
+	try {
+		const data = await getJson(ABI);
+		CONTRACT = new web3.eth.Contract(data.abi);
+		console.log("connectContract() done");
+	} catch (error) {
+		console.log("connectContract() error: ", error);
+	}
 };
 
-const connectContract_two = async (abi, addr) => {
-	const data = await getJson(abi);
-	const abiJson = data.abi;
-	Contract = new web3.eth.Contract(abiJson, addr);
+const connectInstance = async () => {
+	try {
+		const data = await getJson(ABI);
+		INSTANCE = new web3.eth.Contract(data.abi, ADDRESS);
+		console.log("connectInstance() done");
+	} catch (error) {
+		console.log("connectInstance() error: ", error);
+	}
 };
 
-const getBalance = async (addr) => {
-	let balance = await web3.eth.getBalance(addr);
-	return balance;
+const deploy = async () => {
+	try {
+		const instance = await CONTRACT.deploy({
+			arguments: ["", 0],
+			data: "0x" + bytecode,
+		}).send({
+			from: ACCOUNT
+		});
+		ADDRESS = instance.options.address;
+		console.log("New instance deployed:", ADDRESS);
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 const createProperty = async () => {
 	try {
-		let location = document.getElementById("input-location").value;
-		let value = document.getElementById("input-value").value;
-		await connectContract_two(contractABI, contractAddress);
-		Contract.methods
-			.createProperty(location, value)
-			.send({ from: account });
+		const location = "Testing415";
+		const value = 224;
+
+		await INSTANCE.methods.createProperty(location, value).send({
+				from: ACCOUNT,
+			})
+			.on("receipt", (receipt) => {
+				console.log("Property created:", receipt);
+			});
 	} catch (error) {
-		console.log(error.message);
+		console.log("createProperty() error:", error);
 	}
 };
 
 const getDeployedProperties = async () => {
-	printResult("getDeployedProperties() called.");
-	//type of registeredProperties = object, i.e. registeredProperties[0]
-	registeredProperties = await NatoryContract.methods
-		.getDeployedProperties()
-		.call();
-	printResult("Registered properties: " + registeredProperties);
-};
-
-const deploy = async () => {
-	await connectContract_one(ContractABI);
-
-	const constructorArgs = ["Location A", 1000000];
-    Contract.options.data = "0x" + bytecode;
-    Contract.options.arguments = constructorArgs;
-
-    Contract.deploy({
-        arguments: [123, 'My String']
-    })
-    .send({
-        from: account,
-    })
-    .then(function(newContractInstance){
-        console.log(newContractInstance.options.address) // instance with the new contract address
-    });
+	try {
+		const properties = await INSTANCE.methods
+			.getDeployedProperties()
+			.call();
+		console.log("Deployed properties:", properties);
+		return properties;
+	} catch (error) {
+		console.log("getDeployedProperties() error:", error);
+		return;
+	}
 };

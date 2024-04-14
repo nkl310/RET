@@ -1,67 +1,67 @@
 {
-    "abi": [
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": false,
-                    "internalType": "address",
-                    "name": "contractAddress",
-                    "type": "address"
-                }
-            ],
-            "name": "ContractCreated",
-            "type": "event"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "string",
-                    "name": "location",
-                    "type": "string"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "value",
-                    "type": "uint256"
-                }
-            ],
-            "name": "createProperty",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "getDeployedProperties",
-            "outputs": [
-                {
-                    "internalType": "address[]",
-                    "name": "",
-                    "type": "address[]"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "name": "registeredProperties",
-            "outputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        }
-    ]
+	"abi": [
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": false,
+					"internalType": "address",
+					"name": "contractAddress",
+					"type": "address"
+				}
+			],
+			"name": "ContractCreated",
+			"type": "event"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "string",
+					"name": "location",
+					"type": "string"
+				},
+				{
+					"internalType": "uint256",
+					"name": "value",
+					"type": "uint256"
+				}
+			],
+			"name": "createProperty",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "getDeployedProperties",
+			"outputs": [
+				{
+					"internalType": "address[]",
+					"name": "",
+					"type": "address[]"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"name": "registeredProperties",
+			"outputs": [
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		}
+	]
 }
