@@ -35,7 +35,8 @@ window.addEventListener("load", () => {
 		await createProperty();
 	});
 	Btn_getDeployedProperties.addEventListener("click", async () => {
-		await getDeployedProperties();
+        const ppts = await getDeployedProperties();
+        await update(ppts);
 	});
 });
 
@@ -97,20 +98,27 @@ const createProperty = async () => {
 			.on("receipt", (receipt) => {
 				console.log("Property created:", receipt);
 			});
-	} catch (error) {
-		console.log("createProperty() error:", error);
+        } catch (error) {
+            console.log("createProperty() error:", error);
+        }
+    };
+    
+    const getDeployedProperties = async () => {
+        try {
+            const properties = await INSTANCE.methods
+			.getDeployedProperties()
+			.call();
+            console.log("Deployed properties:", properties);
+            return properties;
+        } catch (error) {
+            console.log("getDeployedProperties() error:", error);
+            return;
 	}
 };
 
-const getDeployedProperties = async () => {
-	try {
-		const properties = await INSTANCE.methods
-			.getDeployedProperties()
-			.call();
-		console.log("Deployed properties:", properties);
-		return properties;
-	} catch (error) {
-		console.log("getDeployedProperties() error:", error);
-		return;
-	}
-};
+const update = async (properties) => {
+    const list = document.querySelector("#Instances");
+    for(let i = 0; i < properties.length; i++){
+        list.innerHTML += "<li>"+properties[i]+"</li>"
+    }
+}
