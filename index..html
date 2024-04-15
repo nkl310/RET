@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<link rel="stylesheet" href="style.css" />
 		<title>My Web App</title>
 	</head>
 	<body>
@@ -12,10 +13,9 @@
 		<button id="connectInstance">Connect Instance</button>
 		<button id="createProperty">Create Property</button>
 		<button id="getDeployedProperties">Get Deployed Properties</button>
+		<button id="testRET">testRET</button>
 		<br /><br />
-		<select id="selectContract">
-			<option value="">Select Contract</option>
-		</select>
+		<ul id="natoryList"></ul>
 		<br /><br />
 		<form>
 			<label for="location">Location:</label><br />
@@ -23,10 +23,29 @@
 			<label for="value">Value:</label><br />
 			<input type="text" id="value" value="" /><br /><br />
 		</form>
-		<ul id="Instances"></ul>
+		<br /><br />
+		<button id="connectProperty">connectProperty</button>
+		<button id="getPropertyData">getPropertyData</button>
+		<button id="getTotalSupply">getTotalSupply</button>
+		<button id="getBalanceOf">getBalanceOf</button>
+		<button id="getAllowance">getAllowance</button>
+		<button id="tokenizeProperty">tokenizeProperty</button>
+		<button id="setProperty">setProperty</button>
+        <form>
+			<label for="setProperty_location">setProperty_location:</label><br />
+			<input type="text" id="setProperty_location" value="" /><br />
+			<label for="setProperty_value">setProperty_value:</label><br />
+			<input type="text" id="setProperty_value" value="" /><br />
+		</form>
+		<form>
+			<label for="tokenizeProperty">tokenizeProperty_amount:</label><br />
+			<input type="text" id="tokenizeProperty_amount" value="" />
+		</form>
+		<ul id="propertyList"></ul>
 		<!--scripts-->
 		<script src="https://cdn.jsdelivr.net/npm/web3@1.3.0/dist/web3.min.js"></script>
 		<script type="module" src="transaction_RealEstateTokenNatory.js"></script>
+		<script type="module" src="transaction_RealEstateToken.js"></script>
 		<script type="module" src="bytecode.js"></script>
 		<script src="connectAccount.js"></script>
 	</body>
