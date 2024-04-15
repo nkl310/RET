@@ -1,21 +1,20 @@
 const ABI = "./sol_ABI/transaction_RealEstateTokenNatory.json";
 import { bytecode } from "./bytecode.js";
 
-var ADDRESS = "0x7911cFF8C74E4cba2B2B68cD90C494a8eE836c08";
+var ADDRESS = "";
 var CONTRACT;
 var INSTANCE;
 var ACCOUNT;
 var web3 = new Web3(window.ethereum);
 
 window.addEventListener("load", () => {
+	const selectContract = document.querySelector("#selectContract");
 	const Btn_connectWallet = document.querySelector("#connectWallet");
 	const Btn_connectContract = document.querySelector("#connectContract");
 	const Btn_deploy = document.querySelector("#deploy");
 	const Btn_connectInstance = document.querySelector("#connectInstance");
 	const Btn_createProperty = document.querySelector("#createProperty");
-	const Btn_getDeployedProperties = document.querySelector(
-		"#getDeployedProperties"
-	);
+	const Btn_getDeployedProperties = document.querySelector("#getDeployedProperties");
 
 	Btn_connectWallet.addEventListener("click", async () => {
 		await connectWallet();
@@ -39,6 +38,14 @@ window.addEventListener("load", () => {
 	Btn_getDeployedProperties.addEventListener("click", async () => {
 		const ppts = await getDeployedProperties();
 		await update(ppts);
+	});
+
+	selectContract.addEventListener("change", () => {
+		const selectedAddress = selectContract.value;
+		if (selectedAddress !== "") {
+			ADDRESS = selectedAddress;
+			console.log("Selected contract address:", ADDRESS);
+		}
 	});
 });
 
@@ -84,6 +91,11 @@ const deploy = async () => {
 		});
 		ADDRESS = instance.options.address;
 		console.log("New instance deployed:", ADDRESS);
+		// Store the deployed contract address in local storage
+		const storedAddresses = JSON.parse(localStorage.getItem("deployedAddresses")) || [];
+		storedAddresses.push(ADDRESS);
+		localStorage.setItem("deployedAddresses", JSON.stringify(storedAddresses));
+		updateContractSelectOptions(storedAddresses);
 	} catch (error) {
 		console.log(error);
 	}
@@ -91,8 +103,8 @@ const deploy = async () => {
 
 const createProperty = async () => {
 	try {
-		const location = "Testing415";
-		const value = 224;
+		const location = document.getElementById("location").value;
+		const value = document.getElementById("value").value;
 
 		await INSTANCE.methods
 			.createProperty(location, value)
@@ -109,9 +121,7 @@ const createProperty = async () => {
 
 const getDeployedProperties = async () => {
 	try {
-		const properties = await INSTANCE.methods
-			.getDeployedProperties()
-			.call();
+		const properties = await INSTANCE.methods.getDeployedProperties().call();
 		console.log("Deployed properties:", properties);
 		return properties;
 	} catch (error) {
@@ -122,7 +132,21 @@ const getDeployedProperties = async () => {
 
 const update = async (properties) => {
 	const list = document.querySelector("#Instances");
+	list.innerHTML = ""; // Clear the list before updating
 	for (let i = 0; i < properties.length; i++) {
 		list.innerHTML += "<li>" + properties[i] + "</li>";
 	}
 };
+
+const updateContractSelectOptions = async (addresses) => {
+	const selectContract = document.querySelector("#selectContract");
+	selectContract.innerHTML = ""; // Clear the select options before updating
+	selectContract.innerHTML += '<option value="">Select Contract</option>'; // Add a default option
+	addresses.forEach((address) => {
+		selectContract.innerHTML += `<option value="${address}">${address}</option>`;
+	});
+};
+
+// Load stored contract addresses from local storage
+const storedAddresses = JSON.parse(localStorage.getItem("deployedAddresses")) || []; // If no addresses are stored, initialize with an empty array
+updateContractSelectOptions(storedAddresses);

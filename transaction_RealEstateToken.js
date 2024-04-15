@@ -20,11 +20,17 @@ const getTotalSupply = async () => {
     }
 }
 
-const getBalanceOf = async () => {
+const getBalanceOf = async (addr) => {
     try {
-        const balance = await contract.methods.balanceOf().call();
+        const balance = await contract.methods.balanceOf(addr).call();
         return balance;
     } catch (error) {
         console.log(error.message);
+    }
+}
+
+const allowance = async (owner, spender) => {
+    try{
+        const allowance = await 
     }
 }

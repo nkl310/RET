@@ -1,44 +1,33 @@
 <!DOCTYPE html>
 <html>
+	<head>
+		<title>My Web App</title>
+	</head>
+	<body>
+		<h1>My Web App</h1>
 
-<head>
-    <meta charset="UTF-8" />
-    <title>FYP</title>
-</head>
-
-<body>
-    </button>
-    <button type="button" id="connectWallet">
-        connectWallet
-    </button>
-    <button type="button" id="connectContract">
-        connectContract
-    </button>
-    <button type="button" id="deploy">
-        deploy
-    </button>
-    <button type="button" id="connectInstance">
-        connectInstance
-    </button>
-    <button type="button" id="createProperty">
-        createProperty
-    </button>
-    <button type="button" id="getDeployedProperties">
-        getDeployedProperties
-    </button>
-    
-    <ul id="Instances">
-    </ul>
-    
-        <!--scripts-->
-        <script src="https://cdn.jsdelivr.net/npm/web3@1.3.0/dist/web3.min.js"></script>
-        <!-- 
-        <script type="module" src="./transaction_RealEstateTokenNatory.js"></script>
-        <script type="module" src="bytecode.js"></script>
-        -->
-        <script type="module" src="transaction_RealEstateTokenNatory.js"></script>
-        <script type="module" src="bytecode.js"></script>
-        <script src="connectAccount.js"></script>
-</body>
-
+		<button id="connectWallet">Connect Wallet</button>
+		<button id="connectContract">Connect Contract</button>
+		<button id="deploy">Deploy Contract</button>
+		<button id="connectInstance">Connect Instance</button>
+		<button id="createProperty">Create Property</button>
+		<button id="getDeployedProperties">Get Deployed Properties</button>
+		<br /><br />
+		<select id="selectContract">
+			<option value="">Select Contract</option>
+		</select>
+		<br /><br />
+		<form>
+			<label for="location">Location:</label><br />
+			<input type="text" id="location" value="" /><br />
+			<label for="value">Value:</label><br />
+			<input type="text" id="value" value="" /><br /><br />
+		</form>
+		<ul id="Instances"></ul>
+		<!--scripts-->
+		<script src="https://cdn.jsdelivr.net/npm/web3@1.3.0/dist/web3.min.js"></script>
+		<script type="module" src="transaction_RealEstateTokenNatory.js"></script>
+		<script type="module" src="bytecode.js"></script>
+		<script src="connectAccount.js"></script>
+	</body>
 </html>
