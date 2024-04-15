@@ -1,0 +1,19 @@
+#logo{
+    width: 150px;
+}
+.selectednNatory {
+    color: CornflowerBlue !important;
+    font-weight: bold;
+  }
+.selectedProperty {
+    color: CornflowerBlue !important;
+    font-weight: bold;
+}
+.data-key{
+    color: cornflowerblue;
+    font-weight: bold;
+}
+.card-header{
+    font-size: large;
+    font-weight: bold;
+}

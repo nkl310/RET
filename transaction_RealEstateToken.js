@@ -5,59 +5,14 @@ var web3 = getWeb3();
 var PROPERTY;
 var ADDRESS;
 let selectedProperty;
+window.addEventListener("load", async () => {
+    const Btn_connectProperty = document.querySelector("#connectProperty");
 
-window.addEventListener("load", () => {
-	const Btn_getPropertyData = document.querySelector("#getPropertyData");
-	const Btn_getTotalSupply = document.querySelector("#getTotalSupply");
-	const Btn_getBalanceOf = document.querySelector("#getBalanceOf");
-	const Btn_getAllowance = document.querySelector("#getAllowance");
-	const Btn_connectProperty = document.querySelector("#connectProperty");
-	const Btn_tokenizeProperty = document.querySelector("#tokenizeProperty");
-	const Btn_setProperty = document.querySelector("#setProperty");
+    Btn_connectProperty.addEventListener("click", async () => {
+        await connectProperty();
+        await getPropertyData()
 
-	Btn_getPropertyData.addEventListener("click", async () => {
-		await getPropertyData();
-	});
-
-	Btn_getTotalSupply.addEventListener("click", async () => {
-		await getTotalSupply();
-	});
-
-	Btn_getBalanceOf.addEventListener("click", async () => {
-		await getBalanceOf(getAccount());
-	});
-
-	Btn_getAllowance.addEventListener("click", async () => {
-		//await getAllowance();
-	});
-
-	Btn_connectProperty.addEventListener("click", async () => {
-		await connectProperty();
-	});
-
-	Btn_tokenizeProperty.addEventListener("click", async () => {
-		const amount = document.querySelector("#tokenizeProperty_amount").value;
-		await tokenizeProperty(amount);
-	});
-
-	Btn_setProperty.addEventListener("click", async () => {
-		const location = document.querySelector("#setProperty_location").value;
-		const value = document.querySelector("#setProperty_value").value;
-		await setProperty(location, value);
-	});
-
-	document.querySelector("#propertyList").addEventListener("click", async (event) => {
-		const target = event.target;
-		if (target.tagName === "LI") {
-			const selected = document.querySelector("li.selectedProperty");
-			if (selected) {
-				selected.classList.remove("selectedProperty");
-			}
-			target.classList.add("selectedProperty");
-			ADDRESS = target.textContent;
-			console.log("Chosen Property: ", ADDRESS);
-		}
-	});
+    })
 });
 
 const connectProperty = async () => {
@@ -68,8 +23,8 @@ const connectProperty = async () => {
 	}
 	try {
 		const data = await getJson(ABI);
-		PROPERTY = new web3.eth.Contract(data.abi, ADDRESS);
-		console.log("connectProperty() done");
+		PROPERTY = new web3.eth.Contract(data.abi, selectedElement.textContent);
+        console.log("connectProperty() done\nConnected to", selectedElement.textContent);
 	} catch (error) {
 		console.log("connectProperty() error: ", error);
 	}
@@ -77,15 +32,26 @@ const connectProperty = async () => {
 
 const getPropertyData = async () => {
 	try {
-		const owner = await PROPERTY.methods.owner().call();
+        const propertyDataList = document.querySelector("#propertyDataList");
+        propertyDataList.innerHTML = "";
+        
+        const data = new Map();
+		data.set("Owner", await PROPERTY.methods.owner().call());
 		const propertyData = await PROPERTY.methods.property().call();
-		const location = propertyData.location;
-		const value = propertyData.value;
-		const isTokenized = propertyData.isTokenized;
-		console.log("Owner: ", owner);
-		console.log("Location: ", location);
-		console.log("Value: ", value);
-		console.log("isTokenized: ", isTokenized);
+		data.set("Location", propertyData.location);
+		data.set("Value", propertyData.value);
+		data.set("isTokenized", propertyData.isTokenized);
+
+        const timeStamp = await web3.eth.getBlock(propertyData.blockNumber).then(block => block.timestamp);
+        const creationTime = new Date(timeStamp*1000).toUTCString();
+        data.set("Creation Time", creationTime);
+
+        let total = data.size;
+        let index = 1;
+        data.forEach(function(value, key){
+            propertyDataList.innerHTML += "<li class='list-group-item '>" + "<div class='data-key'>" + key +  ": " + "</div>" + value + "</li><hr class='mt-3.5 mb-3.5'>";
+        })
+
 	} catch (error) {
 		console.log(error);
 	}
