@@ -19,12 +19,7 @@ window.addEventListener("load", async () => {
 	await updateNatoryList(storedAddresses);
 	const Btn_connectWallet = document.querySelector("#connectWallet");
 	const Btn_deploy = document.querySelector("#deploy");
-	const Btn_connectInstance = document.querySelector("#connectInstance");
-    const Btn_createProperty = document.querySelector("#createProperty")
-
-	Btn_connectInstance.addEventListener("click", async () => {
-		await connectInstance();
-	});
+	const Btn_createProperty = document.querySelector("#createProperty");
 
 	Btn_connectWallet.addEventListener("click", async () => {
 		await connectWallet();
@@ -34,33 +29,23 @@ window.addEventListener("load", async () => {
 		await deploy();
 	});
 
-    Btn_createProperty.addEventListener("click", async () => {
-        await createProperty();
-    });
+	Btn_createProperty.addEventListener("click", async () => {
+		await createProperty();
+	});
 
 	document.querySelector("#natoryList").addEventListener("click", async (event) => {
 		const target = event.target;
 		if (target.tagName === "LI") {
-			const selected = document.querySelector("li.selectednNatory");
+			const selected = document.querySelector("li.selectedNatory");
 			if (selected) {
-				selected.classList.remove("selectednNatory");
+				selected.classList.remove("selectedNatory");
 			}
-			target.classList.add("selectednNatory");
+			target.classList.add("selectedNatory");
 			ADDRESS = target.textContent;
 			console.log("Picked: ", ADDRESS);
-		}
-	});
 
-	document.querySelector("#propertyList").addEventListener("click", async (event) => {
-		const target = event.target;
-		if (target.tagName === "LI") {
-			const selected = document.querySelector("li.selectedProperty");
-			if (selected) {
-				selected.classList.remove("selectedProperty");
-			}
-			target.classList.add("selectedProperty");
-			ADDRESS = target.textContent;
-			console.log("Picked: ", ADDRESS);
+			// Connect instance automatically
+			await connectInstance();
 		}
 	});
 });
@@ -88,7 +73,7 @@ const connectContract = async () => {
 };
 
 const connectInstance = async () => {
-	const selectedElement = document.querySelector("li.selectednNatory");
+	const selectedElement = document.querySelector("li.selectedNatory");
 	if (!selectedElement) {
 		console.log("No selected element");
 		return;
@@ -135,8 +120,12 @@ const createProperty = async () => {
 			.on("receipt", (receipt) => {
 				console.log("Property created:", receipt);
 			});
-        await document.getElementById("inputLocation").reset();
-        await document.getElementById("inputValue").reset();
+
+		const res = await getCreatedProperty();
+		await updatePropertyList(res);
+
+		document.getElementById("inputLocation").value == "";
+		document.getElementById("inputValue").value == "";
 	} catch (error) {
 		console.log("createProperty() error:", error);
 	}
