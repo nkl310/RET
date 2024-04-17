@@ -37,17 +37,17 @@
 		<div class="container-fluid my-5 p-3">
 			<div class="container">
 				<div class="row">
-					<div class="col">
+					<div class="col-4">
 						<div class="card">
 							<div class="card-header">
 								Lastest Natory
 								<button id="connectInstance" type="button" class="btn btn-outline-primary mx-1" style="float: right">Connect</button>
-								<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#inputModal" style="float: right">Create</button>
-								<div class="modal fade" id="inputModal" tabindex="-1">
+								<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createModal" style="float: right">Create</button>
+								<div class="modal fade" id="createModal" tabindex="-1">
 									<div class="modal-dialog">
 										<div class="modal-content">
 											<div class="modal-header">
-												<h5 class="modal-title" id="inputModalLabel">Enter Data</h5>
+												<h5 class="modal-title" id="createModalLabel">Enter Data</h5>
 												<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 											</div>
 											<div class="modal-body">
@@ -72,7 +72,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col">
+					<div class="col-4">
 						<div class="card">
 							<div class="card-header">
 								Created property of selected natory
@@ -83,16 +83,41 @@
 									----
 								</ul>
 							</div>
-							<div class="card">
-								<div class="card-header">Property's data</div>
-								<div class="card-body">
-									<ul id="propertyDataList" class="list-group">
-										----
-									</ul>
-								</div>
-							</div>
 						</div>
 					</div>
+					<div class="col-4">
+						<div class="card">
+							<div class="card-header">
+								Property's data
+								<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tokenizeModal" style="float: right">Tokenize</button>
+								<div class="modal fade" id="tokenizeModal" tabindex="-1">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="tokenizeModalLabel">Enter Data</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+											</div>
+											<div class="modal-body">
+												<div id="inputLocation" class="form-floating mb-3">
+													<input id="tokenizeAmount" type="text" class="form-control" />
+													<label for="tokenizeAmount">Amount</label>
+												</div>
+											</div>
+											<div class="modal-footer">
+												<button id="createProperty" type="button" class="btn btn-danger" data-bs-dismiss="modal">Send</button>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+							<div class="card-body">
+								<ul id="propertyDataList" class="list-group">
+									----
+								</ul>
+							</div>
+						</div>
+				</div>
 				</div>
 			</div>
 		</div>
