@@ -11,16 +11,15 @@ var INSTANCE;
 var ACCOUNT;
 //provider, window.ethereum for metamask
 var web3 = new Web3(window.ethereum);
-const storedAddresses = JSON.parse(localStorage.getItem("deployedAddresses")) || [];
+const storedAddresses =
+	JSON.parse(localStorage.getItem("deployedAddresses")) || [];
 
 window.addEventListener("load", async () => {
 	await connectContract();
-	await connectWallet();
 	await updateNatoryList(storedAddresses);
 	const Btn_connectWallet = document.querySelector("#connectWallet");
 	const Btn_deploy = document.querySelector("#deploy");
 	const Btn_createProperty = document.querySelector("#createProperty");
-
 	Btn_connectWallet.addEventListener("click", async () => {
 		await connectWallet();
 	});
@@ -32,7 +31,6 @@ window.addEventListener("load", async () => {
 	Btn_createProperty.addEventListener("click", async () => {
 		await createProperty();
 	});
-
 	document.querySelector("#natoryList").addEventListener("click", async (event) => {
 		const target = event.target;
 		if (target.tagName === "LI") {
@@ -48,6 +46,7 @@ window.addEventListener("load", async () => {
 			await connectInstance();
 		}
 	});
+
 });
 
 export const getJson = async (path) => {
@@ -100,7 +99,10 @@ const deploy = async () => {
 		const addr = instance.options.address;
 		console.log("New instance deployed:", addr);
 		await storedAddresses.push(addr);
-		await localStorage.setItem("deployedAddresses", JSON.stringify(storedAddresses));
+		await localStorage.setItem(
+			"deployedAddresses",
+			JSON.stringify(storedAddresses)
+		);
 		await updateNatoryList(storedAddresses);
 	} catch (error) {
 		console.log(error);
@@ -137,7 +139,9 @@ const getCreatedProperty = async () => {
 		return;
 	}
 	try {
-		const properties = await INSTANCE.methods.getDeployedProperties().call();
+		const properties = await INSTANCE.methods
+			.getDeployedProperties()
+			.call();
 		console.log("Deployed properties from", ADDRESS, ":", properties);
 		return properties;
 	} catch (error) {
@@ -155,10 +159,14 @@ const updatePropertyList = async (properties) => {
 	propertyList.innerHTML = "";
 	for (let i = 0; i < properties.length; i++) {
 		if (i == properties.length - 1) {
-			propertyList.innerHTML += "<li class='list-group-item'>" + properties[i] + "</li>";
+			propertyList.innerHTML +=
+				"<li class='list-group-item'>" + properties[i] + "</li>";
 			break;
 		}
-		propertyList.innerHTML += "<li class='list-group-item'>" + properties[i] + "</li><hr class='mt-3.5 mb-3.5'>";
+		propertyList.innerHTML +=
+			"<li class='list-group-item'>" +
+			properties[i] +
+			"</li><hr class='mt-3.5 mb-3.5'>";
 	}
 };
 
@@ -171,10 +179,14 @@ const updateNatoryList = async (addresses) => {
 	natoryList.innerHTML = "";
 	for (let i = 0; i < addresses.length; i++) {
 		if (i == addresses.length - 1) {
-			natoryList.innerHTML += "<li class='list-group-item'>" + addresses[i] + "</li>";
+			natoryList.innerHTML +=
+				"<li class='list-group-item'>" + addresses[i] + "</li>";
 			break;
 		}
-		natoryList.innerHTML += "<li class='list-group-item'>" + addresses[i] + "</li><hr class='mt-3.5 mb-3.5'>";
+		natoryList.innerHTML +=
+			"<li class='list-group-item'>" +
+			addresses[i] +
+			"</li><hr class='mt-3.5 mb-3.5'>";
 	}
 };
 
