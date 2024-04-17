@@ -13,7 +13,6 @@ var PROPERTY;
 var ADDRESS;
 let selectedProperty;
 window.addEventListener("load", async () => {
-<<<<<<< HEAD
     const Btn_tokenizeProperty = document.querySelector("#tokenizeProperty");
 
     Btn_tokenizeProperty.addEventListener("click", async () => {
@@ -67,11 +66,6 @@ const getPropertyData = async () => {
 		propertyDataList.innerHTML = "";
 
 		const data = new Map();
-<<<<<<< HEAD
-
-=======
-		data.set("Owner", await PROPERTY.methods.owner().call());
->>>>>>> 6b5660b50c3d2f227b088c39f3cae561a8464d0f
 		const propertyData = await PROPERTY.methods.property().call();
 		const timeStamp = await web3.eth.getBlock(propertyData.blockNumber).then(block => block.timestamp);
 		const creationTime = new Date(timeStamp * 1000).toUTCString();
@@ -81,7 +75,6 @@ const getPropertyData = async () => {
 		data.set("Value", propertyData.value);
 		data.set("isTokenized", propertyData.isTokenized);
 
-<<<<<<< HEAD
 
 		const dataArray = Array.from(data.entries());
 		const total = dataArray.length;
@@ -97,26 +90,6 @@ const getPropertyData = async () => {
 
 			propertyDataList.innerHTML += listItem;
 		}
-=======
-		const timeStamp = await web3.eth
-			.getBlock(propertyData.blockNumber)
-			.then((block) => block.timestamp);
-		const creationTime = new Date(timeStamp * 1000).toUTCString();
-		data.set("Creation Time", creationTime);
-
-		let total = data.size;
-		let index = 1;
-		data.forEach(function (value, key) {
-			propertyDataList.innerHTML +=
-				"<li class='list-group-item '>" +
-				"<div class='data-key'>" +
-				key +
-				": " +
-				"</div>" +
-				value +
-				"</li><hr class='mt-3.5 mb-3.5'>";
-		});
->>>>>>> 6b5660b50c3d2f227b088c39f3cae561a8464d0f
 	} catch (error) {
 		console.log(error);
 	}
@@ -257,15 +230,8 @@ const trasnferFrom = async (from, to, amount) => {
 	}
 };
 
-<<<<<<< HEAD
 const setPrices = async (buyPrice) => {
 	PROPERTY.methods.setPrices(buyPrice).send({
-=======
-const tokenizeProperty = async () => {
-	const amount = document.getElementById("#tokenizeAmount").value;
-
-	await PROPERTY.methods.tokenizeProperty(amount).send({
->>>>>>> 6b5660b50c3d2f227b088c39f3cae561a8464d0f
 		from: getAccount(),
 	}),
 		(error, transactionHash) => {
@@ -294,70 +260,4 @@ const setProperty = async (location, value) => {
 	);
 };
 
-<<<<<<< HEAD
 //Vote functions
-=======
-const setPrices = async (buyPrice) => {
-	PROPERTY.methods.setPrices(buyPrice).send({
-		from: getAccount(),
-	}),
-		(error, transactionHash) => {
-			if (error) {
-				console.error("setPrices() error:", error);
-			} else {
-				console.log("Transaction Hash:", transactionHash);
-				console.log("setPrices() done");
-			}
-		};
-};
-
-const UpdatePrices = async (buyPrice) => {
-	try {
-		await PROPERTY.methods
-			.UpdatePrices(buyPrice)
-			.send({ from: getAccount() });
-		console.log("UpdatePrices() done");
-	} catch (error) {
-		console.log(error);
-	}
-};
-
-const getTransaction = async () => {
-	try {
-		const transactionDetails = await PROPERTY.methods
-			.getTransaction()
-			.call({ from: getAccount() });
-		console.log("transactionDetails: ", transactionDetails);
-	} catch (error) {
-		console.log(error);
-	}
-};
-
-const getLastTransaction = async () => {
-	try {
-		const lastTransaction = await PROPERTY.methods
-			.getLastTransaction()
-			.call({ from: getAccount() });
-		console.log("Last transaction at:", lastTransaction);
-	} catch (error) {
-		console.log(error);
-	}
-};
-
-const buyTokens = async (amount) => {
-	const amountToSend = web3.utils.toWei(amount, "ether");
-	contract.methods.buyTokens().send(
-		{
-			value: amountToSend,
-			from: getAccount(),
-		},
-		(error, transactionHash) => {
-			if (error) {
-				console.error("Error calling buyTokens():", error);
-			} else {
-				console.log("Transaction Hash:", transactionHash);
-			}
-		}
-	);
-};
->>>>>>> 6b5660b50c3d2f227b088c39f3cae561a8464d0f
