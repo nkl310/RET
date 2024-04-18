@@ -1,6 +1,5 @@
 const ABI = "./sol_ABI/transaction_RealEstateTokenNatory.json";
 import { bytecode } from "./bytecode.js";
-
 //addr of current connected contract's instance
 var ADDRESS = "";
 //connected contract with only bytecode and ABI, allowing deploy(), not for calling functions
@@ -11,8 +10,7 @@ var INSTANCE;
 var ACCOUNT;
 //provider, window.ethereum for metamask
 var web3 = new Web3(window.ethereum);
-const storedAddresses =
-	JSON.parse(localStorage.getItem("deployedAddresses")) || [];
+const storedAddresses = JSON.parse(localStorage.getItem("deployedAddresses")) || [];
 
 window.addEventListener("load", async () => {
 	await connectContract();

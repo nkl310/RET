@@ -12,14 +12,24 @@ var web3 = getWeb3();
 var PROPERTY;
 var ADDRESS;
 let selectedProperty;
+
 window.addEventListener("load", async () => {
     const Btn_tokenizeProperty = document.querySelector("#tokenizeProperty");
+    const Btn_interact = document.querySelector("#interact");
 
     Btn_tokenizeProperty.addEventListener("click", async () => {
         const tokenAmount = document.querySelector("#tokenAmount").value;
         await tokenizeProperty(tokenAmount);
     });
     
+    Btn_interact.addEventListener("click", async () => {
+        var append = ADDRESS; // Replace 'example' with your variable value
+
+        var current = "http://127.0.0.1:5500/seller_interact.html";
+        var redirect = current + "?" + "address" + "=" + append;
+        window.location.href = redirect;
+    })
+
     document.querySelector("#propertyList").addEventListener("click", async (event) => {
 		const target = event.target;
 		if (target.tagName === "LI") {
